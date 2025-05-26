@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Qualifizierung</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      color: #ff7f00;
+    }
+    .card {
+      background-color: #1a1a1a;
+      color: #ff7f00;
+      max-width: 500px;
+      margin: 0 auto;
+      border: none;
+      border-radius: 1rem;
+      padding: 1rem;
+    }
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .step-indicator .step {
+      text-align: center;
+      flex: 1;
+      position: relative;
+    }
+    .step-indicator .step::before {
+      content: attr(data-step);
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      border-radius: 50%;
+      background-color: #444;
+      color: #fff;
+      z-index: 2;
+      position: relative;
+    }
+    .step-indicator .step.active::before {
+      background-color: #ff7f00;
+    }
+    .step-indicator .step::after {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background-color: #444;
+      z-index: 1;
+    }
+    .step-indicator .step:last-child::after {
+      content: none;
+    }
+    .step-label {
+      margin-top: 0.5rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <div class="card shadow">
+      <div class="card-body">
+        <div class="step-indicator">
+          <div class="step active" data-step="1"><div class="step-label">Fragen</div></div>
+          <div class="step" data-step="2"><div class="step-label">Kontakt</div></div>
+          <div class="step" data-step="3"><div class="step-label">Überprüfen</div></div>
+        </div>
+
+        <form id="multiStepForm">
+          <!-- Step 1 -->
+          <div class="step-content" id="step1">
+            <h5>Informationen zur Immobilie</h5>
+            <div class="mb-3">
+              <label for="art" class="form-label">Art der Immobilie</label>
+              <select class="form-select" id="art">
+                <option>Haus</option>
+                <option>Wohnung</option>
+                <option>Grundstück</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Befindet sich die Immobilie bereits im Verkauf?</label>
+              <select class="form-select">
+                <option>Ja</option>
+                <option>Nein</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Wann möchten Sie verkaufen?</label>
+              <select class="form-select">
+                <option>Sofort</option>
+                <option>In 3–6 Monaten</option>
+                <option>Später</option>
+              </select>
+            </div>
+            <button type="button" class="btn btn-warning" onclick="nextStep(2)">Weiter</button>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-content d-none" id="step2">
+            <h5>Kontaktdaten</h5>
+            <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">E-Mail</label>
+              <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="mb-3">
+              <label for="phone" class="form-label">Telefonnummer</label>
+              <input type="text" class="form-control" id="phone" required>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="nextStep(1)">Zurück</button>
+            <button type="button" class="btn btn-warning" onclick="fillSummary()">Weiter</button>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-content d-none" id="step3">
+            <h5>Zusammenfassung</h5>
+            <ul class="list-group mb-3" id="summaryList"></ul>
+            <button type="button" class="btn btn-secondary" onclick="nextStep(2)">Zurück</button>
+            <button type="submit" class="btn btn-success">Absenden</button>
+          </div>
+
+          <!-- Step 4 (Danke) -->
+          <div class="step-content d-none" id="step4">
+            <h5>Vielen Dank!</h5>
+            <p>Wir haben Ihre Angaben erhalten und werden uns bald bei Ihnen melden.</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function nextStep(step) {
+      document.querySelectorAll('.step-content').forEach(el => el.classList.add('d-none'));
+      document.getElementById('step' + step).classList.remove('d-none');
+
+      const steps = document.querySelectorAll('.step-indicator .step');
+      steps.forEach((el, index) => {
+        if (index === step - 1) {
+          el.classList.add('active');
+        } else {
+          el.classList.remove('active');
+        }
+      });
+    }
+
+    function fillSummary() {
+      const summaryList = document.getElementById('summaryList');
+      summaryList.innerHTML = '';
+
+      const art = document.getElementById('art').value;
+      const immoStatus = document.querySelectorAll('#step1 select')[1].value;
+      const verkaufszeitpunkt = document.querySelectorAll('#step1 select')[2].value;
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+
+      const data = [
+        ['Art der Immobilie', art],
+        ['Bereits im Verkauf', immoStatus],
+        ['Geplanter Verkaufszeitpunkt', verkaufszeitpunkt],
+        ['Name', name],
+        ['E-Mail', email],
+        ['Telefonnummer', phone]
+      ];
+
+      data.forEach(([label, value]) => {
+        const li = document.createElement('li');
+        li.classList.add('list-group-item');
+        li.innerHTML = `<strong>${label}:</strong> ${value}`;
+        summaryList.appendChild(li);
+      });
+
+      nextStep(3);
+    }
+
+    document.getElementById('multiStepForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      nextStep(4);
+    });
+  </script>
+</body>
+</html>
