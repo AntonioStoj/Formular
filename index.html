@@ -77,28 +77,33 @@
         <form id="multiStepForm">
           <!-- Step 1 -->
           <div class="step-content" id="step1">
-            <h5>Informationen zur Immobilie</h5>
+            <h5>Wichtige Qualifizierungs‑Kriterien</h5>
             <div class="mb-3">
-              <label for="art" class="form-label">Art der Immobilie</label>
-              <select class="form-select" id="art">
-                <option>Haus</option>
+              <label class="form-label">Wann möchten Sie verkaufen?</label>
+              <select class="form-select" id="verkaufszeitpunkt">
+                <option>Zeitnah</option>
+                <option>In 3 Monaten</option>
+                <option>In 6+ Monaten</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Welchen Preis möchten Sie erzielen?</label>
+              <input type="text" class="form-control" id="verkaufspreis">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Welche Art von Immobilie?</label>
+              <select class="form-select" id="immobilienart">
                 <option>Wohnung</option>
+                <option>Einfamilienhaus</option>
+                <option>Mehrfamilienhaus</option>
                 <option>Grundstück</option>
               </select>
             </div>
             <div class="mb-3">
-              <label class="form-label">Befindet sich die Immobilie bereits im Verkauf?</label>
-              <select class="form-select">
+              <label class="form-label">Sind Sie Alleineigentümer?</label>
+              <select class="form-select" id="eigentumsstatus">
                 <option>Ja</option>
                 <option>Nein</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Wann möchten Sie verkaufen?</label>
-              <select class="form-select">
-                <option>Sofort</option>
-                <option>In 3–6 Monaten</option>
-                <option>Später</option>
               </select>
             </div>
             <button type="button" class="btn btn-warning" onclick="nextStep(2)">Weiter</button>
@@ -160,17 +165,19 @@
       const summaryList = document.getElementById('summaryList');
       summaryList.innerHTML = '';
 
-      const art = document.getElementById('art').value;
-      const immoStatus = document.querySelectorAll('#step1 select')[1].value;
-      const verkaufszeitpunkt = document.querySelectorAll('#step1 select')[2].value;
+      const verkaufszeitpunkt = document.getElementById('verkaufszeitpunkt').value;
+      const verkaufspreis = document.getElementById('verkaufspreis').value;
+      const immobilienart = document.getElementById('immobilienart').value;
+      const eigentumsstatus = document.getElementById('eigentumsstatus').value;
       const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
 
       const data = [
-        ['Art der Immobilie', art],
-        ['Bereits im Verkauf', immoStatus],
         ['Geplanter Verkaufszeitpunkt', verkaufszeitpunkt],
+        ['Gewünschter Verkaufspreis', verkaufspreis],
+        ['Immobilienart', immobilienart],
+        ['Alleineigentümer', eigentumsstatus],
         ['Name', name],
         ['E-Mail', email],
         ['Telefonnummer', phone]
